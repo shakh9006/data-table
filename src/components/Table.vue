@@ -55,9 +55,19 @@
             tableData: {
                 get() {
                     let data = this.getData
-                    return this.getSearch
+                    let result = this.getSearch
                         ? data.filter(e => e.name.toUpperCase().indexOf(this.getSearch.toUpperCase()) > -1)
                         : data
+
+                    return result.map(e => {
+                        return {
+                            ...e,
+                            price: this.numberFormat(e.price),
+                            weight: this.numberFormat(e.weight),
+                            quantity: this.numberFormat(e.quantity)
+                        }
+                    })
+
                 },
             }
         },
@@ -79,6 +89,13 @@
                 'updateDialog',
                 'updateEditedItem',
             ]),
+
+            numberFormat(x) {
+                if (typeof (+x) === "number")
+                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                return x
+            },
+
             ...mapMutations({
                 delete: 'deleteItem',
             })
